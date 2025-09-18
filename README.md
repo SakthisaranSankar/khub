@@ -20,3 +20,25 @@ curl --location 'https://api-talk-to-your-document-cdgfa3fcbcfrc9bv.uaenorth-01.
         "departments": "TEC-Cloud Solutions"
     }
 }'
+
+
+
+
+
+{
+    "search": "good morning",
+    "top": 10,
+    //   "orderby": "@search.score desc",
+    "vectorQueries": [
+        {
+            "kind": "text",
+            "text": "good morning",
+            "fields": "chunk_vector"
+        }
+    ],
+    "queryType": "semantic",
+    "semanticConfiguration": "semantic-config",
+      "select": "metadata_storage_name,metadata_storage_path,page_number,document_key,chunk_text,id,metadata_storage_last_modified,divisions,legal_entity,departments,employee_types,page_headings,page_keyphrases",
+    "filter": "legal_entity/any(d:search.in(d, 'General,General',',')) and divisions/any(d:search.in(d, 'General,ADIB',',')) and employee_types/any(d:search.in(d, 'General,General',',')) and departments/any(d:search.in(d, 'General,General,General',','))"
+    //   "confidenceScoreThreshold": 0.5
+}
