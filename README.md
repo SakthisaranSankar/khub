@@ -25,10 +25,13 @@ curl --location 'https://api-talk-to-your-document-cdgfa3fcbcfrc9bv.uaenorth-01.
 
 
 
-{
+curl --location 'https://aisearch-talktoyourdocument.search.windows.net/indexes/index-talktoyourdocuments/docs/search?api-version=2024-07-01' \
+--header 'Content-Type: application/json' \
+--header 'api-key: GsX00lDAD150RXTeiYP896djyuRO0sLLtnT8PxisYKAzSeCOatbu' \
+--data '{
     "search": "good morning",
     "top": 10,
-    //   "orderby": "@search.score desc",
+    
     "vectorQueries": [
         {
             "kind": "text",
@@ -39,6 +42,6 @@ curl --location 'https://api-talk-to-your-document-cdgfa3fcbcfrc9bv.uaenorth-01.
     "queryType": "semantic",
     "semanticConfiguration": "semantic-config",
       "select": "metadata_storage_name,metadata_storage_path,page_number,document_key,chunk_text,id,metadata_storage_last_modified,divisions,legal_entity,departments,employee_types,page_headings,page_keyphrases",
-    "filter": "legal_entity/any(d:search.in(d, 'General,General',',')) and divisions/any(d:search.in(d, 'General,ADIB',',')) and employee_types/any(d:search.in(d, 'General,General',',')) and departments/any(d:search.in(d, 'General,General,General',','))"
-    //   "confidenceScoreThreshold": 0.5
-}
+    "filter": "legal_entity/any(d:search.in(d, '\''General,General'\'','\'','\'')) and divisions/any(d:search.in(d, '\''General,ADIB'\'','\'','\'')) and employee_types/any(d:search.in(d, '\''General,General'\'','\'','\'')) and departments/any(d:search.in(d, '\''General,General,General'\'','\'','\''))"
+    
+}'
