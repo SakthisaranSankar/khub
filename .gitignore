@@ -1,0 +1,8 @@
+.venv
+.idea
+__pycache__
+*.zip
+
+.github
+
+Dockerfile
