@@ -14,21 +14,22 @@ cp .env.example .env
 
 ```env
 # Azure Search
-AI_SEARCH_ENDPOINT=https://your-search-service.search.windows.net
-AI_SEARCH_INDEX=your-index
-AI_SEARCH_API_KEY=your-real-api-key
+AI_SEARCH_ENDPOINT="https://your-search-service.search.windows.net"
+AI_SEARCH_INDEX="your-index"
+AI_SEARCH_API_KEY="your-real-api-key"
 
 # OpenAI
-OPENAI_MODEL=gpt-4o
-OPENAI_API_URL=https://your-openai-endpoint
-OPENAI_API_KEY=your-real-api-key
+OPENAI_MODEL="gpt-4o"
+OPENAI_API_URL="https://your-openai-endpoint"
+OPENAI_API_KEY="your-real-api-key"
 
 # SQL Database
-SQL_DB=your_db
-SQL_HOST=your-db-host
-SQL_PORT=3306
-SQL_USER=your-db-user
-SQL_PASSWORD=your-db-password
+SQL_DB="your_db"
+SQL_HOST="your-db-host"
+SQL_PORT="3306"
+SQL_USER="your-db-user"
+SQL_PASSWORD="your-db-password"
+
 ```
 
 > **Note:** Do not commit your `.env` file to Git. Only `.env.example` should be in the repository.
