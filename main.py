@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 app = FastAPI()
-
+ENV_FILE=".env"
 FILTER_FIELDS = [
     "legal_entity",
     "divisions",
@@ -83,6 +83,35 @@ app.add_middleware(
 @app.get("/ping")
 async def ping():
     return JSONResponse(content={"message": "pong"})
+
+'''@app.post("/get_tags_dummy")
+def get_tags_dummy(data: TagRequest):
+    recordId = data.values[0].recordId
+    response_json = {"values": []}
+
+    # Generate dummy tags
+    dummy_tags = {field: [f"dummy_{field}_tag"] for field in FILTER_FIELDS[:5]}  # example first 5 fields
+
+    response_json["values"].append({
+        "recordId": recordId,
+        "data": dummy_tags,
+        "errors": "",
+        "warnings": ""
+    })
+    return response_json
+
+@app.post("/search_dummy")
+def search_dummy(query: dict):
+    recordId = query.get("recordId", "1")
+    # Return mock search results
+    dummy_results = [
+        {"chunk_text": "This is a dummy search result", "page_number": 1, "document_key": "doc_123"}
+    ]
+    return {"recordId": recordId, "results": dummy_results}
+
+'''
+
+
 
 
 @app.post("/get_tags")
@@ -304,7 +333,7 @@ def pre_process_chunk(chunk):
                          })
 
         sources.append({"fileName": i['metadata_storage_name'],
-                        "fileUrl": f'{i['metadata_storage_path']}?{FILE_PREVIEW_TOKEN}',
+                        "fileUrl": f"{i['metadata_storage_path']}?{FILE_PREVIEW_TOKEN}",
                         'pageNumber': i["page_number"],
                         "document_key": i['document_key'],
                         "lastUpdatedDate": i["metadata_storage_last_modified"],
@@ -386,6 +415,70 @@ def search(data: SearchRequest):
         answer_json['suggestedQuestions'] = []
     return JSONResponse(content=answer_json)
 
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint.
+    Checks server status, important directories, and environment variables.
+    """
+    dirs_to_check = ["/app/data", "/app/logs"]
+    dir_status = {}
+    empty_files = []
 
+    # --- Check directories and file sizes ---
+    for d in dirs_to_check:
+        if os.path.exists(d) and os.access(d, os.W_OK):
+            dir_status[d] = "ok"
+            # Check for empty files
+            for root, _, files in os.walk(d):
+                for f in files:
+                    file_path = os.path.join(root, f)
+                    if os.path.isfile(file_path) and os.path.getsize(file_path) == 0:
+                        empty_files.append(file_path)
+        elif os.path.exists(d):
+            dir_status[d] = "read-only"
+        else:
+            dir_status[d] = "missing"
+
+    # --- Check .env file for empty values ---
+    env_status = "ok"
+    empty_env_vars = []
+
+    if os.path.exists(ENV_FILE):
+        with open(ENV_FILE, "r") as f:
+            for line in f:
+                line = line.strip()
+                # Ignore empty lines and comments
+                if line and not line.startswith("#"):
+                    if "=" not in line or line.split("=", 1)[1].strip() == "":
+                        empty_env_vars.append(line)
+    else:
+        env_status = "missing"
+        empty_env_vars.append(".env file not found")
+
+    if empty_env_vars:
+        env_status = "issues"
+
+    # --- Determine overall status ---
+    if empty_files or env_status == "issues" or any(status != "ok" for status in dir_status.values()):
+        overall_status = "issues"
+        status_code = 500
+        message = "Health check failed"
+    else:
+        overall_status = "ok"
+        status_code = 200
+        message = "Server health check passed"
+
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "status": overall_status,
+            "message": message,
+            "directories": dir_status,
+            "empty_files": empty_files,
+            "env_status": env_status,
+            "empty_env_vars": empty_env_vars
+        }
+    )
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
