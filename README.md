@@ -1,5 +1,3 @@
----
-
 ## 1. Setup Environment Variables
 
 The app requires secrets and configuration in a `.env` file.
@@ -143,7 +141,7 @@ make clean
    - Use `make logs` to debug errors.
    - Ensure `.env` variables are correct, especially endpoints and API keys.
 
----
+
 
 This README ensures the client can **configure, run, and maintain the service** without touching the code, only the `.env` file and Docker commands.
 
