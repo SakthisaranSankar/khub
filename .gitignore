@@ -1,10 +1,47 @@
-.venv
-.idea
-__pycache__
-*.zip
 
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.env.*        # any local env variations
+*.swp           # vim swap files
 .github
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+*.zip
+# -------------------------
+# Docker
+# -------------------------
+*.log
+*.pid
+*.sock
+*.tmp
 
-Dockerfile
+# Docker Compose override files
+docker-compose.override.yml
 
-.env
+# -------------------------
+# OS / IDE / Editor
+# -------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# -------------------------
+# Misc
+# -------------------------
+*.sqlite3
+*.db
+*.egg-info/
+dist/
+build/
